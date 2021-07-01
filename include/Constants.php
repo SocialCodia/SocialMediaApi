@@ -8,9 +8,9 @@ define('FAILED_TO_CREATE_ACCOUNT', 'Failed to create an account');
 define('JWT_SECRET_KEY', 'socialcodiasocialcodiasocialcodia.com');
 
 
-define('WEBSITE_DOMAIN', 'localhost/api/public');
+define('WEBSITE_DOMAIN', 'http://localhost/api/public/');
 define('WEBSITE_EMAIL', 'info.mufazmi@gmail.com');
-define('WEBSITE_EMAIL_PASSWORD', 'PASSWORD');
+define('WEBSITE_EMAIL_PASSWORD', '@Umair4Firdos@');
 define('WEBSITE_EMAIL_FROM', 'Social Codia');
 define('SMTP_HOST', 'smtp.gmail.com');
 define('SMTP_PORT', '587');
