@@ -24,6 +24,15 @@ define('EMAIL_NOT_VERIFEIED', 'Email Not Verified');
 define('WRONG_PASSWORD', 'Wrong Password');
 define('EMAIL_NOT_EXIST', 'Email Not Registered');
 
+define('INVAILID_CODE', 'Invalid Code');
+define('EMAIL_VERIFICATION_FAILED', 'Failed To Verify Your Email Address');
+define('EMAIL_VERIFIED','Email Has Been Verified');
+
+define('EMAIL_ALREADY_VERIFIED', 'Email Already Verified');
+
+
+
+
 
 
 

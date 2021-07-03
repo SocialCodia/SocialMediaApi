@@ -72,6 +72,28 @@ class DbHandler
             return EMAIL_NOT_EXIST;
     }
 
+    function verifyEmail($email,$code)
+    {
+        $user = $this->getUserByEmail($email);
+        $userId = $user['id'];
+        $this->setUserId($userId);
+        $dbCode = $this->getCode(1);
+        if($dbCode==$code)
+        {
+            if(!$this->isEmailVerified($email))
+            {
+                if($this->setEmailIsVerfied($email))
+                    return EMAIL_VERIFIED;
+                else
+                    return EMAIL_VERIFICATION_FAILED;
+            }
+            else
+                return EMAIL_ALREADY_VERIFIED;
+        }
+        else
+            return INVAILID_CODE;
+    }
+
     function getUserByEmail($email)
     {
         $query = "SELECT id,name,email,bio,image,verified FROM users WHERE email=?";
@@ -110,6 +132,18 @@ class DbHandler
         $stmt->bind_result($code);
         $stmt->fetch();
         return $code;
+    }
+
+    function setEmailIsVerfied($email)
+    {
+        $status = 1;
+        $query = "UPDATE users SET status=? WHERE email=?";
+        $stmt = $this->con->prepare($query);
+        $stmt->bind_param('ss',$status,$email);
+        if($stmt->execute())
+            return true;
+        else
+            return false;
     }
 
     function getPasswordByEmail($email)

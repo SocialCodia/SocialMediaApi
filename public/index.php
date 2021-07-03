@@ -58,6 +58,32 @@ $app->post('/register',function(Request $request, Response $response)
 	}
 });
 
+$app->post('/verifyEmail',function(Request $request,Response $response)
+{
+	if(!haveEmptyParameter(array('email','code'),$request,$response))
+	{
+		$requestParameter = $request->getParsedBody();
+		$email = $requestParameter['email'];
+		$code = $requestParameter['code'];
+		$decEmail = decrypt($email);
+		$db = new DbHandler;
+		if(!$db->isEmailValid($decEmail))
+			return returnResponse(true,EMAIL_NOT_VALID,$response);
+
+		if(!$db->isEmailExist($decEmail))
+			return returnResponse(true,EMAIL_NOT_EXIST,$response);
+		$result = $db->verifyEmail($decEmail,$code);
+		if($result==INVAILID_CODE)
+			return returnResponse(true,INVAILID_CODE,$response);
+		if($result==EMAIL_ALREADY_VERIFIED)
+			return returnResponse(true,EMAIL_ALREADY_VERIFIED,$response);
+		if($result==EMAIL_VERIFICATION_FAILED)
+			return returnResponse(true,EMAIL_VERIFICATION_FAILED,$response);
+		if($result==EMAIL_VERIFIED)
+			return returnResponse(true,EMAIL_VERIFIED,$response);
+	}
+});
+
 $app->post('/login',function (Request $request,Response $response)
 {
 	if(!haveEmptyParameter(array('email','password'),$request,$response))
@@ -249,6 +275,14 @@ function encrypt($email)
 	$encEmail = str_replace('/','socialcodia',$encEmail);
 	$encEmail = str_replace('+','socialmedia',$encEmail);
 	return $encEmail;
+}
+
+function decrypt($email)
+{
+	$email = str_replace('socialcodia','/',$email);
+	$email = str_replace('socialmedia','+',$email);
+	$decEmail = openssl_decrypt($email,'AES-128-ECB',null);
+	return $decEmail;
 }
 
 function returnResponse($error,$message,$response)
