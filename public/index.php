@@ -80,7 +80,7 @@ $app->post('/verifyEmail',function(Request $request,Response $response)
 		if($result==EMAIL_VERIFICATION_FAILED)
 			return returnResponse(true,EMAIL_VERIFICATION_FAILED,$response);
 		if($result==EMAIL_VERIFIED)
-			return returnResponse(true,EMAIL_VERIFIED,$response);
+			return returnResponse(false,EMAIL_VERIFIED,$response);
 	}
 });
 
@@ -120,7 +120,7 @@ $app->post('/login',function (Request $request,Response $response)
 
 function sentVerificationMail($name,$email,$code)
 {
-	$websiteDomain = WEBSITE_DOMAIN;
+	$websiteDomain = WEBSITE_DOMAIN_CLIENT;
 	$endPoint = 'verifyEmail/';
 	$websiteName = WEBSITE_NAME;
 	$websiteOwnerName = WEBSITE_OWNER_NAME;

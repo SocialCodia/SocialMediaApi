@@ -9,6 +9,8 @@ define('JWT_SECRET_KEY', 'socialcodiasocialcodiasocialcodia.com');
 
 
 define('WEBSITE_DOMAIN', 'http://localhost/api/public/');
+define('WEBSITE_DOMAIN_CLIENT', 'http://localhost/web/');
+
 define('WEBSITE_EMAIL', 'info.mufazmi@gmail.com');
 define('WEBSITE_EMAIL_PASSWORD', '@Umair4Firdos@');
 define('WEBSITE_EMAIL_FROM', 'Social Codia');
@@ -29,6 +31,8 @@ define('EMAIL_VERIFICATION_FAILED', 'Failed To Verify Your Email Address');
 define('EMAIL_VERIFIED','Email Has Been Verified');
 
 define('EMAIL_ALREADY_VERIFIED', 'Email Already Verified');
+
+define('EMAIL_NOT_VALID', 'Invalid Email Address');
 
 
 
