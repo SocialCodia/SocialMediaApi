@@ -17,14 +17,12 @@ $app = new \Slim\App([
 	]
 ]);
 
-
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
     $response->getBody()->write("Hello, $name");
 
     return $response;
 });
-
 
 $app->post('/register',function(Request $request, Response $response)
 {
@@ -92,29 +90,43 @@ $app->post('/login',function (Request $request,Response $response)
 		$requestParameter = $request->getParsedBody();
 		$email = $requestParameter['email'];
 		$password = $requestParameter['password'];
-		if(!$db->isEmailValid($email))
-			return returnResponse(true,'Invalid Email Address',$response);
+		
 		if(strlen($password)<8)
 			return returnResponse(true,'Password too Short',$response);
-		$result = $db->login($email,$password);
-		if($result==EMAIL_NOT_VERIFEIED)
-			return returnResponse(true,EMAIL_NOT_VERIFEIED,$response);
-		if($result==WRONG_PASSWORD)
-			return returnResponse(true,WRONG_PASSWORD,$response);
-		if($result==EMAIL_NOT_EXIST)
-			return returnResponse(true,EMAIL_NOT_EXIST,$response);
-		if($result==LOGIN_SUCCESS)
+
+		if(!$db->isEmailValid($email))
 		{
-			$user = $db->getUserByEmail($email);
-			$user['token'] = getToken($user['id']);
-			$resp = array();
-			$resp['error'] = false;
-			$resp['message'] = LOGIN_SUCCESS;
-			$resp['user'] = $user;
-			$response->write(json_encode($resp));
-			return $response->withHeader('Content-Type','application/json')
-					->withStatus(200);
+			$email = trim(preg_replace('/ +/', ' ', preg_replace('/[^A-Za-z0-9 ]/', ' ', urldecode(html_entity_decode(strip_tags($email))))));
+			$email = str_replace(' ','',$email);
+			$email = $db->getEmailByUsername($email);
 		}
+
+		if(!empty($email))
+		{
+			$result = $db->login($email,$password);
+			if($result==EMAIL_NOT_VERIFEIED)
+				return returnResponse(true,EMAIL_NOT_VERIFEIED,$response);
+			if($result==WRONG_PASSWORD)
+				return returnResponse(true,WRONG_PASSWORD,$response);
+			if($result==EMAIL_NOT_EXIST)
+				return returnResponse(true,EMAIL_NOT_EXIST,$response);
+			if($result==LOGIN_SUCCESS)
+			{
+				$user = $db->getUserByEmail($email);
+				$user['token'] = getToken($user['id']);
+				$resp = array();
+				$resp['error'] = false;
+				$resp['message'] = LOGIN_SUCCESS;
+				$resp['user'] = $user;
+				$response->write(json_encode($resp));
+				return $response->withHeader('Content-Type','application/json')
+						->withStatus(200);
+			}
+		}
+		else
+			return returnResponse(true,'User Not Found',$response);
+
+
 	}
 });
 

@@ -157,6 +157,17 @@ class DbHandler
         return $password;
     }
 
+    function getEmailByUsername($username)
+    {
+        $query = "SELECT email FROM users WHERE username=?";
+        $stmt = $this->con->prepare($query);
+        $stmt->bind_param('s',$username);
+        $stmt->execute();
+        $stmt->bind_result($email);
+        $stmt->fetch();
+        return $email;
+    }
+
     function isEmailVerified($email)
     {
         $query = "SELECT status FROM users WHERE email=?";
